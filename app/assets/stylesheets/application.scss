@@ -13,3 +13,12 @@
  *= require_tree .
  *= require_self
  */
+
+ //! Custom bootstrap variables must be set or imported *before* bootstrap.
+ @import "bootstrap";
+
+//! set padding to body
+//! this is required to avoid content to be hidden by the bootstrap fixed navbar
+body {
+  padding-top: 70px;
+}
