@@ -5,4 +5,7 @@ Rails.application.routes.draw do
   # use a dedicated controller for this specific route
   root to: 'root#index'
 
+  # Projects-related routes
+  resources :projects, param: :slug
+
 end
