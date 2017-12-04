@@ -1,3 +1,4 @@
+# Contain project related information
 class Project
 
   # MongoID configuration

@@ -1,7 +1,7 @@
+# Special controller meant to handle GET /
 class RootController < ApplicationController
 
   # GET /
-  # Root Path
   def index
   end
 
