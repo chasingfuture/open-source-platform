@@ -56,6 +56,8 @@ group :development do
 end
 
 group :test do
+  # codecov
+  gem 'codecov', require: false
   # test runner
   gem 'rspec-rails'
   # code coverage
