@@ -3,4 +3,7 @@ language: ruby
 rvm:
   - 2.4.0-p0
 
+services:
+  - mongodb
+
 script: bundle exec rspec
