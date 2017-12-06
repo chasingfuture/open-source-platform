@@ -61,6 +61,12 @@ end
 group :test do
   # codecov
   gem 'codecov', require: false
+  # ensure mongoDB is reset before test
+  gem 'database_cleaner' 
+  # test factories
+  gem "factory_bot_rails"
+  # test plugin
+  gem 'rails-controller-testing'
   # test runner
   gem 'rspec-rails'
   # code coverage

@@ -54,4 +54,18 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # Clean/Reset Mongoid DB prior to running each test.
+  config.before(:suite) do
+    DatabaseCleaner[:mongoid].strategy = :truncation
+    DatabaseCleaner[:mongoid].clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
 end
