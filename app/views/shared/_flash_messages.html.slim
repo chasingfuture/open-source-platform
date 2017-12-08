@@ -1,0 +1,3 @@
+- if flash.any?
+  - flash.each do |k, v|
+    = render "shared/flash_messages/#{k}", message: v

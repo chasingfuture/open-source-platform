@@ -9,12 +9,16 @@ end
 gem 'bootstrap', '~> 4.0.0.beta2.1'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
+# environment variables access
+gem 'dotenv-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Use mongoDB for data storage
 gem 'mongoid', '~> 6.1.0'
+# Github API
+gem "octokit", "~> 4.0"
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -59,10 +63,12 @@ group :development do
 end
 
 group :test do
+  # capybara
+  gem 'capybara'
   # codecov
   gem 'codecov', require: false
   # ensure mongoDB is reset before test
-  gem 'database_cleaner' 
+  gem 'database_cleaner'
   # test factories
   gem "factory_bot_rails"
   # test plugin

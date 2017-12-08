@@ -14,18 +14,9 @@ nav.navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-dark
         li.nav-item
           a.nav-link href="#"  Link
 
-        li.nav-item.dropdown
-          a#navbarDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button"
-            | Dropdown
-          .dropdown-menu aria-labelledby="navbarDropdown"
-            a.dropdown-item href="#"  Action
-            a.dropdown-item href="#"  Another action
-            .dropdown-divider
-            a.dropdown-item href="#"  Something else here
-
-        li.nav-item
-          a.nav-link.disabled href="#"  Disabled
-
-      form.form-inline.my-2.my-lg-0
-        input.form-control.mr-sm-2 aria-label="Search" placeholder="Search" type="search" /
-        button.btn.btn-outline-info.my-2.my-sm-0 type="submit"  Search
+      ul.navbar-nav
+        - if user_signed_in?
+          li.nav-item
+            a.nav-link href="#" = current_user.name
+        - else
+          = link_to I18n.t("views.layouts.navbar.sign_in"), login_path, class: 'btn btn-outline-info my-2 my-sm-0'

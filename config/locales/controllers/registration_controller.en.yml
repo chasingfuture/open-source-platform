@@ -1,0 +1,6 @@
+en:
+  controllers:
+    registration_controller:
+      login_via_github:
+        success: Successfully authenticated!
+        error: Sorry, we could not authenticate you. Please, try again.

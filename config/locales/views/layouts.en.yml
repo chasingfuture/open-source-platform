@@ -1,0 +1,5 @@
+en:
+  views:
+    layouts:
+      navbar:
+        sign_in: Sign In
