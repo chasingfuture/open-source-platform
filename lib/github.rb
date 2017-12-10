@@ -4,7 +4,7 @@ module Github
 
   # Return the full url for OAuth login.
   def self.oauth_login_url
-    Octokit.authorize_url client_id: GITHUB_API_CLIENT_INFO[:id], scope: "user:email"
+    Octokit.authorize_url GITHUB_API_CLIENT_INFO[:id], scope: "user:email"
   end
 
   # Given a temporary OAuth code, reach out to Github API to convert it into an access token

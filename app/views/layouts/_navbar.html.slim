@@ -5,9 +5,20 @@ nav.navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-dark
       span.navbar-toggler-icon
 
     #navbarSupportedContent.collapse.navbar-collapse
+      //! Right side of the navbar
       ul.navbar-nav.ml-auto
+        //! When authenticated, dropdown showing
+        //!  > name of the user when not toggled
+        //!  > Menu to access own profile or logout when toggled
         - if user_signed_in?
-          li.nav-item
-            a.nav-link href="#" = current_user.name
+          li.nav-item.dropdown
+            = link_to '#', class: 'nav-link', id: "navbar_user_profile_dropdown", 'data-toggle' => "dropdown", 'aria-haspopup' => "true", 'aria-expanded' => "false" do
+              = current_user.name
+              = image_tag current_user.avatar_url, size: 30, class: 'rounded-circle navbar-profile-img'
+            .dropdown-menu aria-labelledby="navbar_user_profile_dropdown"
+              = link_to I18n.t("views.layouts.navbar.my_profile"), '#', class: 'dropdown-item'
+              = link_to I18n.t("views.layouts.navbar.sign_out"), logout_path, method: :delete, class: 'dropdown-item'
+
+        //! When not authenticated, login button
         - else
           = link_to I18n.t("views.layouts.navbar.sign_in"), login_path, class: 'btn btn-outline-info my-2 my-sm-0'

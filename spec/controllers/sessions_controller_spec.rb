@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RegistrationController, type: :controller do
+RSpec.describe SessionsController, type: :controller do
 
   let!(:user) { FactoryBot.create :user_simon_ninon }
 
@@ -9,7 +9,7 @@ RSpec.describe RegistrationController, type: :controller do
     context 'when the user is already authenticated' do
 
       it 'should redirect to the home page' do
-        get :login, session: { user_id: user.id }
+        get :new, session: { user_id: user.id }
         expect(response).to redirect_to root_path
       end
 
@@ -18,7 +18,7 @@ RSpec.describe RegistrationController, type: :controller do
     context 'when the user is not authenticated' do
 
       it 'should redirect to the github oauth login page' do
-        get :login
+        get :new
         expect(response).to redirect_to Github::oauth_login_url
       end
 
@@ -26,12 +26,12 @@ RSpec.describe RegistrationController, type: :controller do
 
   end
 
-  describe 'login_via_github' do
+  describe 'create' do
 
     context 'when the user is already authenticated' do
 
       it 'should redirect to the home page' do
-        get :login_via_github, session: { user_id: user.id }
+        get :create, session: { user_id: user.id }
         expect(response).to redirect_to root_path
       end
 
@@ -47,13 +47,13 @@ RSpec.describe RegistrationController, type: :controller do
       end
 
       it 'should redirect ot home page' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(response).to redirect_to root_path
-        expect(flash[:error]).to eq I18n.t("controllers.registration_controller.login_via_github.error")
+        expect(flash[:error]).to eq I18n.t("controllers.sessions_controller.create.error")
       end
 
       it 'should not create a new account' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(User.count).to eq 0
       end
 
@@ -70,13 +70,13 @@ RSpec.describe RegistrationController, type: :controller do
       end
 
       it 'should redirect ot home page' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(response).to redirect_to root_path
-        expect(flash[:error]).to eq I18n.t("controllers.registration_controller.login_via_github.error")
+        expect(flash[:error]).to eq I18n.t("controllers.sessions_controller.create.error")
       end
 
       it 'should not create a new account' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(User.count).to eq 0
       end
 
@@ -93,13 +93,13 @@ RSpec.describe RegistrationController, type: :controller do
       end
 
       it 'should redirect ot home page' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(response).to redirect_to root_path
-        expect(flash[:error]).to eq I18n.t("controllers.registration_controller.login_via_github.error")
+        expect(flash[:error]).to eq I18n.t("controllers.sessions_controller.create.error")
       end
 
       it 'should not create a new account' do
-        get :login_via_github, params: { code: '1234' }
+        get :create, params: { code: '1234' }
         expect(User.count).to eq 0
       end
 
@@ -118,13 +118,13 @@ RSpec.describe RegistrationController, type: :controller do
         end
 
         it 'should redirect ot home page' do
-          get :login_via_github, params: { code: '1234' }
+          get :create, params: { code: '1234' }
           expect(response).to redirect_to root_path
-          expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
+          expect(flash[:success]).to eq I18n.t("controllers.sessions_controller.create.success")
         end
 
         it 'should create a new account' do
-          get :login_via_github, params: { code: '1234' }
+          get :create, params: { code: '1234' }
           expect(User.count).to eq 2
 
           # check user fields
@@ -145,13 +145,13 @@ RSpec.describe RegistrationController, type: :controller do
           end
 
           it 'should redirect ot home page' do
-            get :login_via_github, params: { code: '1234' }
+            get :create, params: { code: '1234' }
             expect(response).to redirect_to root_path
-            expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
+            expect(flash[:success]).to eq I18n.t("controllers.sessions_controller.create.success")
           end
 
           it 'should update the user information' do
-            get :login_via_github, params: { code: '1234' }
+            get :create, params: { code: '1234' }
             expect(User.count).to eq 1
 
             # check user fields
@@ -172,13 +172,13 @@ RSpec.describe RegistrationController, type: :controller do
           end
 
           it 'should redirect ot home page' do
-            get :login_via_github, params: { code: '1234' }
+            get :create, params: { code: '1234' }
             expect(response).to redirect_to root_path
-            expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
+            expect(flash[:success]).to eq I18n.t("controllers.sessions_controller.create.success")
           end
 
           it 'should update the user information' do
-            get :login_via_github, params: { code: '1234' }
+            get :create, params: { code: '1234' }
             expect(User.count).to eq 1
 
             # check user fields
@@ -188,6 +188,32 @@ RSpec.describe RegistrationController, type: :controller do
 
         end
 
+      end
+
+    end
+
+  end
+
+  describe 'destroy' do
+
+    context 'when the user is already authenticated' do
+
+      it 'should redirect to the home page' do
+        get :new, session: { user_id: user.id }
+        expect(session[:user_id]).to eq user.id
+
+        delete :destroy
+        expect(response).to redirect_to root_path
+        expect(session[:user_id]).to eq nil
+      end
+
+    end
+
+    context 'when the user is not authenticated' do
+
+      it 'should redirect to the login page' do
+        delete :destroy
+        expect(response).to redirect_to login_path
       end
 
     end

@@ -1,6 +1,6 @@
 fr:
   controllers:
-    registration_controller:
-      login_via_github:
+    sessions_controller:
+      create:
         success: Authentifié avec succès!
         error: Désolé, nous n'avons pas pu vous identifier. Veuillez réessayer.

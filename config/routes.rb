@@ -5,9 +5,10 @@ Rails.application.routes.draw do
   # use a dedicated controller for this specific route
   root to: 'root#index'
 
-  # Registration-related routes
-  get '/login', to: 'registration#login', as: :login
-  get '/oauth/callback/github', to: 'registration#login_via_github'
+  # Sessions related routes
+  get    '/login',                 to: 'sessions#new',     as: :login
+  delete '/logout',                to: 'sessions#destroy', as: :logout
+  get    '/oauth/callback/github', to: 'sessions#create'
 
   # Projects-related routes
   resources :projects, param: :slug

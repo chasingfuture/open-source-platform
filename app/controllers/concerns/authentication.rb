@@ -26,7 +26,7 @@ module Authentication
     # skip if no valid session information
     if @current_user.nil? && session[:user_id].present?
       # find user based on user id stored in the session
-      @current_user = User.find(session[:user_id])
+      @current_user = User.find(session[:user_id]) rescue nil
     end
 
     # return current user information
@@ -38,6 +38,12 @@ module Authentication
   # Meant to be used in a before_action filter.
   def authenticate!
     redirect_to login_path unless authenticate_with_session
+  end
+
+  # Opposite of authenticate!.
+  # If the user is already authenticated or can be authenticated based on its session, redirect him to homepage
+  def already_authenticated!
+    redirect_to root_path if user_signed_in?
   end
 
 end

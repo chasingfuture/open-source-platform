@@ -1,21 +1,22 @@
 require 'github'
 
-# Handles all logic related to registration (mostly deal with OAuth providers)
-class RegistrationController < ApplicationController
+# Handles all logic related to sessions: oauth & signout
+class SessionsController < ApplicationController
 
-  before_action :redirect_authenticated_user
+  before_action :already_authenticated!, only: [:new, :create]
+  before_action :authenticate!,          only: [:destroy]
 
   # GET /login
   # for now, directly redirects to github handler as only github is supported for auth
   # if the user is already authenticated, redirect to root path as there is nothing to do
-  def login
+  def new
     redirect_to Github::oauth_login_url
   end
 
   # GET /oauth/callback/github
   # Github OAuth API callback
   # Sign in the user (and creates an account if necessary)
-  def login_via_github
+  def create
     # convert code into access token
     access_token = Github::oauth_exchange_code_for_token params[:code]
 
@@ -37,20 +38,22 @@ class RegistrationController < ApplicationController
     session[:user_id]             = user.id
 
     # notify the user of the success
-    flash[:success] = I18n.t('controllers.registration_controller.login_via_github.success')
+    flash[:success] = I18n.t('controllers.sessions_controller.create.success')
   rescue Exception => e
     # notify the user of the failure
-    flash[:error] = I18n.t('controllers.registration_controller.login_via_github.error')
+    flash[:error] = I18n.t('controllers.sessions_controller.create.error')
   ensure
     # always redirect to the main page
     redirect_to root_path
   end
 
-  private
-
-  # If a user is already authenticated, redirect him to the home page
-  def redirect_authenticated_user
-    redirect_to root_path if user_signed_in?
+  # DELETE /logout
+  # logout the user by erasing its session
+  def destroy
+    # reset session
+    reset_session
+    # redirect to the home page
+    redirect_to root_path
   end
 
 end

@@ -20,6 +20,10 @@ RSpec.describe Authentication do
       'login_path'
     end
 
+    def root_path
+      'root_path'
+    end
+
   end
 
   let(:user) { FactoryBot.create :user_simon_ninon }
@@ -167,6 +171,48 @@ RSpec.describe Authentication do
   end
 
   describe 'authenticate' do
+
+    context 'when current_user is set' do
+
+      it 'should return the right user' do
+        # force set a specific user
+        testing_class.current_user = user
+
+        expect(testing_class.authenticate_with_session).to eq user
+      end
+
+    end
+
+    context 'when current_user is not set but user is authenticated (has session)' do
+
+      it 'should return the right user' do
+        # set the session
+        testing_class.session[:user_id] = user.id
+
+        expect(testing_class.authenticate_with_session).to eq user
+      end
+
+    end
+
+    context 'when current_user is not set but user is authenticated (has session) but user could not be found in DB' do
+
+      it 'should return nil' do
+        # set the session
+        testing_class.session[:user_id] = "#{user.id}_invalid"
+
+        expect(testing_class.authenticate_with_session).to eq nil
+      end
+
+    end
+
+    context 'when current_user is not set and user is not authenticated (has no session)' do
+
+      it 'should return nil' do
+        expect(testing_class.authenticate_with_session).to eq nil
+      end
+
+    end
+
   end
 
   describe 'authenticate!' do
@@ -212,6 +258,55 @@ RSpec.describe Authentication do
         expect(testing_class).to receive(:redirect_to).with(testing_class.login_path)
 
         testing_class.authenticate!
+      end
+
+    end
+
+  end
+
+  describe 'already_authenticated!' do
+
+    context 'when current_user is set' do
+
+      it 'should redirect' do
+        # force set a specific user
+        testing_class.current_user = user
+
+        # make sure authenticate is not called and user is returned right away
+        expect(testing_class).not_to receive(:authenticate_with_session).and_call_original
+        # make sure it triggers redirection
+        expect(testing_class).to receive(:redirect_to).with(testing_class.root_path)
+
+        testing_class.already_authenticated!
+      end
+
+    end
+
+    context 'when current_user is not set but user is authenticated (has session)' do
+
+      it 'should redirect after authenticating the user based on its session' do
+        # set the session
+        testing_class.session[:user_id] = user.id
+
+        # make sure authenticate is called
+        expect(testing_class).to receive(:authenticate_with_session).and_call_original
+        # make sure it triggers redirection
+        expect(testing_class).to receive(:redirect_to).with(testing_class.root_path)
+
+        testing_class.already_authenticated!
+      end
+
+    end
+
+    context 'when current_user is not set and user is not authenticated (has no session)' do
+
+      it 'should not redirect after failing to authenticate the user based on its session' do
+        # make sure authenticate is called
+        expect(testing_class).to receive(:authenticate_with_session).and_call_original
+        # make sure it does not trigger redirection
+        expect(testing_class).not_to receive(:redirect_to)
+
+        testing_class.already_authenticated!
       end
 
     end

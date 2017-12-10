@@ -2,4 +2,6 @@ fr:
   views:
     layouts:
       navbar:
+        my_profile: Mon Profil
         sign_in: Se Connecter
+        sign_out: Se Déconnecter
