@@ -130,7 +130,7 @@ RSpec.describe Authentication do
         # make sure it calls current_user function
         expect(testing_class).to receive(:current_user).and_call_original
         # should be authenticated
-        expect(testing_class.authenticated?).to be_truthy
+        expect(testing_class.user_signed_in?).to be_truthy
       end
 
     end
@@ -146,7 +146,7 @@ RSpec.describe Authentication do
         # make sure it calls current_user function
         expect(testing_class).to receive(:current_user).and_call_original
         # should be authenticated
-        expect(testing_class.authenticated?).to be_truthy
+        expect(testing_class.user_signed_in?).to be_truthy
       end
 
     end
@@ -159,7 +159,7 @@ RSpec.describe Authentication do
         # make sure it calls current_user function
         expect(testing_class).to receive(:current_user).and_call_original
         # should not be authenticated
-        expect(testing_class.authenticated?).to be_falsey
+        expect(testing_class.user_signed_in?).to be_falsey
       end
 
     end
