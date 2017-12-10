@@ -26,6 +26,7 @@ class RegistrationController < ApplicationController
     user = User.find_or_initialize_by(github_ext_id: github_profile[:id])
 
     # setup or update profile
+    user.login      = github_profile[:login]
     user.name       = github_profile[:name]
     user.email      = github_profile[:email]
     user.avatar_url = github_profile[:avatar_url]

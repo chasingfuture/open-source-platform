@@ -5,16 +5,7 @@ nav.navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-dark
       span.navbar-toggler-icon
 
     #navbarSupportedContent.collapse.navbar-collapse
-      ul.navbar-nav.mr-auto
-        li.nav-item.active
-          a.nav-link href="#"
-            | Home
-            span.sr-only (current)
-
-        li.nav-item
-          a.nav-link href="#"  Link
-
-      ul.navbar-nav
+      ul.navbar-nav.ml-auto
         - if user_signed_in?
           li.nav-item
             a.nav-link href="#" = current_user.name

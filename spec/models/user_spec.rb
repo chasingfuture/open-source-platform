@@ -126,6 +126,50 @@ RSpec.describe User, type: :model do
 
     end
 
+    describe 'login' do
+
+      describe 'nil' do
+
+        before { user.login = nil }
+
+        it 'should not be valid' do
+          expect(user.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'empty' do
+
+        before { user.login = "" }
+
+        it 'should not be valid' do
+          expect(user.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'blank' do
+
+        before { user.login = "   " }
+
+        it 'should not be valid' do
+          expect(user.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'not unique' do
+
+        before { FactoryBot::create :user_simon_ninon, login: user.login }
+
+        it 'should not be valid' do
+          expect(user.valid?).to be_falsey
+        end
+
+      end
+
+    end
+
   end
 
 end

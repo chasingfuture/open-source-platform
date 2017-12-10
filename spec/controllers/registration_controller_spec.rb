@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RegistrationController, type: :controller do
 
-  let(:user) { FactoryBot.create :user_simon_ninon }
+  let!(:user) { FactoryBot.create :user_simon_ninon }
 
   describe 'login' do
 
@@ -109,12 +109,12 @@ RSpec.describe RegistrationController, type: :controller do
 
       context 'when the user account does not exist yet' do
 
-        let(:user) { FactoryBot.build :user_simon_ninon }
+        let(:new_user) { FactoryBot.build :user_mengying_li }
 
         # mock octokit
         before do
           expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
-          expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: user.github_ext_id, name: user.name, email: user.email, avatar_url: user.avatar_url })
+          expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: new_user.github_ext_id, login: new_user.login, name: new_user.name, email: new_user.email, avatar_url: new_user.avatar_url })
         end
 
         it 'should redirect ot home page' do
@@ -125,45 +125,67 @@ RSpec.describe RegistrationController, type: :controller do
 
         it 'should create a new account' do
           get :login_via_github, params: { code: '1234' }
-          expect(User.count).to eq 1
+          expect(User.count).to eq 2
 
           # check user fields
-          db_user = User.first
-          expect(db_user.github_ext_id).to  eq user.github_ext_id
-          expect(db_user.name).to           eq user.name
-          expect(db_user.email).to          eq user.email
-          expect(db_user.avatar_url).to     eq user.avatar_url
+          attrs = User.last.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
+          expect(attrs).to eq({ "github_ext_id" => new_user.github_ext_id, "login" => new_user.login, "name" => new_user.name, "email" => new_user.email, "avatar_url" => new_user.avatar_url })
         end
 
       end
 
       context 'when the user account exists' do
 
-        let(:user) { FactoryBot.create :user_simon_ninon }
-        let(:edited_user) { FactoryBot.create :user_mengying_li }
+        context 'with same info' do
 
-        # mock octokit
-        before do
-          expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
-          expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: edited_user.github_ext_id, name: edited_user.name, email: edited_user.email, avatar_url: edited_user.avatar_url })
+          # mock octokit
+          before do
+            expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
+            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: user.github_ext_id, login: user.login, name: user.name, email: user.email, avatar_url: user.avatar_url })
+          end
+
+          it 'should redirect ot home page' do
+            get :login_via_github, params: { code: '1234' }
+            expect(response).to redirect_to root_path
+            expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
+          end
+
+          it 'should update the user information' do
+            get :login_via_github, params: { code: '1234' }
+            expect(User.count).to eq 1
+
+            # check user fields
+            attrs = User.first.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
+            expect(attrs).to eq({ "github_ext_id" => user.github_ext_id, "login" => user.login, "name" => user.name, "email" => user.email, "avatar_url" => user.avatar_url })
+          end
+
         end
 
-        it 'should redirect ot home page' do
-          get :login_via_github, params: { code: '1234' }
-          expect(response).to redirect_to root_path
-          expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
-        end
+        context 'with updated info' do
 
-        it 'should update the user information' do
-          get :login_via_github, params: { code: '1234' }
-          expect(User.count).to eq 1
+          let(:edited_user) { FactoryBot.build :user_mengying_li }
 
-          # check user fields
-          db_user = User.first
-          expect(db_user.github_ext_id).to  eq edited_user.github_ext_id
-          expect(db_user.name).to           eq edited_user.name
-          expect(db_user.email).to          eq edited_user.email
-          expect(db_user.avatar_url).to     eq edited_user.avatar_url
+          # mock octokit
+          before do
+            expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
+            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: user.github_ext_id, login: edited_user.login, name: edited_user.name, email: edited_user.email, avatar_url: edited_user.avatar_url })
+          end
+
+          it 'should redirect ot home page' do
+            get :login_via_github, params: { code: '1234' }
+            expect(response).to redirect_to root_path
+            expect(flash[:success]).to eq I18n.t("controllers.registration_controller.login_via_github.success")
+          end
+
+          it 'should update the user information' do
+            get :login_via_github, params: { code: '1234' }
+            expect(User.count).to eq 1
+
+            # check user fields
+            attrs = User.first.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
+            expect(attrs).to eq({ "github_ext_id" => user.github_ext_id, "login" => edited_user.login, "name" => edited_user.name, "email" => edited_user.email, "avatar_url" => edited_user.avatar_url })
+          end
+
         end
 
       end
