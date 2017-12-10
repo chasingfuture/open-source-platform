@@ -1,3 +1,5 @@
+# Contains all helper method to handle authentication within controllers.
+# Basically, functions to authenticate a user, get its authentication status or filter users depending on their status.
 module Authentication
 
   # make it a concern

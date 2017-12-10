@@ -16,7 +16,7 @@ nav.navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-dark
               = current_user.name
               = image_tag current_user.avatar_url, size: 30, class: 'rounded-circle navbar-profile-img'
             .dropdown-menu aria-labelledby="navbar_user_profile_dropdown"
-              = link_to I18n.t("views.layouts.navbar.my_profile"), '#', class: 'dropdown-item'
+              = link_to I18n.t("views.layouts.navbar.my_profile"), user_path(login: current_user.login), class: 'dropdown-item'
               = link_to I18n.t("views.layouts.navbar.sign_out"), logout_path, method: :delete, class: 'dropdown-item'
 
         //! When not authenticated, login button

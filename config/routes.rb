@@ -13,4 +13,7 @@ Rails.application.routes.draw do
   # Projects-related routes
   resources :projects, param: :slug
 
+  # Users-related routes
+  resources :users, param: :login, only: :show
+
 end

@@ -1,1 +1,2 @@
-yardoc 'lib/**/*.rb' 'app/**/*.rb' - README
+yardoc 'lib/**/*.rb' 'app/**/*.rb' - README.md
+
