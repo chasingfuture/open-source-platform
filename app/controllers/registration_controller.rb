@@ -3,15 +3,13 @@ require 'github'
 # Handles all logic related to registration (mostly deal with OAuth providers)
 class RegistrationController < ApplicationController
 
+  before_action :redirect_authenticated_user
+
   # GET /login
   # for now, directly redirects to github handler as only github is supported for auth
   # if the user is already authenticated, redirect to root path as there is nothing to do
   def login
-    if authenticated?
-      redirect_to root_path
-    else
-      redirect_to Github::oauth_login_url
-    end
+    redirect_to Github::oauth_login_url
   end
 
   # GET /oauth/callback/github
@@ -45,6 +43,13 @@ class RegistrationController < ApplicationController
   ensure
     # always redirect to the main page
     redirect_to root_path
+  end
+
+  private
+
+  # If a user is already authenticated, redirect him to the home page
+  def redirect_authenticated_user
+    redirect_to root_path if user_signed_in?
   end
 
 end
