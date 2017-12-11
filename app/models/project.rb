@@ -17,6 +17,9 @@ class Project
   field :git_url,         type: String
   field :homepage_url,    type: String
 
+  # relations
+  belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'
+
   # Indexes
   index({ slug: 1 }, { unique: true })
 
@@ -26,5 +29,6 @@ class Project
   validates_presence_of :git_url
   validates_presence_of :slug
   validates_uniqueness_of :slug
+  validates_presence_of :owner
 
 end

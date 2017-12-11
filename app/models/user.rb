@@ -15,6 +15,9 @@ class User
   field :avatar_url,      type: String
   field :github_ext_id,   type: Integer
 
+  # Relations
+  has_many :projects, foreign_key: 'owner_id'
+
   # Indexes
   index({ github_ext_id: 1 }, { unique: true })
   index({ login: 1 }, { unique: true })

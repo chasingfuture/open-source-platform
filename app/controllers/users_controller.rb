@@ -7,6 +7,8 @@ class UsersController < ApplicationController
   # Get /users/:login.
   # Display user profile.
   def show
+    # also fetch related projects
+    @projects = @user.projects
   end
 
   private

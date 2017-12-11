@@ -2,6 +2,27 @@ require 'rails_helper'
 
 RSpec.describe Project, type: :model do
 
+  describe 'associations' do
+
+    describe 'owner' do
+
+      # User 1 project
+      let!(:simon_ninon) { FactoryBot::create :user_simon_ninon }
+      let!(:project_simon_ninon) { FactoryBot::create :project_cpp_redis }
+
+      # User 2 project
+      let!(:mengying_li) { FactoryBot::create :user_mengying_li }
+      let!(:project_mengying_li) { FactoryBot::create :project_cse_110 }
+
+      it 'should return the appropriate owner' do
+        expect(project_simon_ninon.owner).to eq simon_ninon
+        expect(project_mengying_li.owner).to eq mengying_li
+      end
+
+    end
+
+  end
+
   describe 'validations' do
 
     let(:project) { FactoryBot::build :project_cpp_redis }
@@ -155,6 +176,51 @@ RSpec.describe Project, type: :model do
         it 'should not be valid' do
           expect(project.valid?).to be_falsey
         end
+
+      end
+
+    end
+
+    describe 'owner' do
+
+      describe 'nil' do
+
+        before { project.owner = nil }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'empty' do
+
+        before { project.owner_id = "" }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'blank' do
+
+        before { project.owner_id = "  " }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'invalid' do
+
+        before { project.owner_id = "42" }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
 
       end
 
