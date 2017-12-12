@@ -226,6 +226,94 @@ RSpec.describe Project, type: :model do
 
     end
 
+    describe 'ext_id' do
+
+      describe 'nil' do
+
+        before { project.ext_id = nil }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'empty' do
+
+        before { project.ext_id = "" }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'blank' do
+
+        before { project.ext_id = "   " }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'not unique' do
+
+        before { FactoryBot::create :project_tacopie, ext_id: project.ext_id }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+    end
+
+    describe 'ext_source' do
+
+      describe 'nil' do
+
+        before { project.ext_source = nil }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'empty' do
+
+        before { project.ext_source = "" }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'blank' do
+
+        before { project.ext_source = "   " }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+      describe 'not in authorized values' do
+
+        before { project.ext_source = "GITEUB" }
+
+        it 'should not be valid' do
+          expect(project.valid?).to be_falsey
+        end
+
+      end
+
+    end
+
   end
 
 end

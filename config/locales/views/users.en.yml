@@ -1,0 +1,7 @@
+en:
+  views:
+    users:
+      show:
+        sign_in_to_sync: Sign in to sync your profile
+        sync: Sync
+        sync_tooltip: Synchronize the profile by pulling Github data

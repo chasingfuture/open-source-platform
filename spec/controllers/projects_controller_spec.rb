@@ -8,7 +8,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       let(:project) { FactoryBot::create(:project_cpp_redis) }
 
-      before { get :show, params: {slug: project.slug} }
+      before { get :show, params: {user_login: project.owner.login, platform: project.ext_source, slug: project.slug} }
 
       it 'should work' do
         expect(response).to have_http_status(200)
@@ -21,7 +21,7 @@ RSpec.describe ProjectsController, type: :controller do
 
       let(:project) { FactoryBot::build(:project_cpp_redis) }
 
-      before { get :show, params: {slug: project.slug} }
+      before { get :show, format: :json, params: {user_login: project.owner.login, platform: project.ext_source, slug: project.slug} }
 
       it 'should return a 404' do
         expect(response).to have_http_status(404)

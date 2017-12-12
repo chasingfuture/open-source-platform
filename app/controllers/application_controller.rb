@@ -15,4 +15,16 @@ class ApplicationController < ActionController::Base
   helper_method :authenticated?
   helper_method :user_signed_in?
 
+  # authorization checking is required to be explicit for every action
+  check_authorization
+
+  # unauthorize access handling
+  rescue_from CanCan::AccessDenied do |exception|
+    respond_to do |format|
+      format.json { render json: { success: false, message: I18n.t("controllers.application_controller.access_denied") }, status: 401 }
+      format.html { redirect_to main_app.root_url, notice: I18n.t("controllers.application_controller.access_denied") }
+      format.js   { render json: { success: false, message: I18n.t("controllers.application_controller.access_denied") }, status: 401 }
+    end
+  end
+
 end

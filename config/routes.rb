@@ -10,10 +10,17 @@ Rails.application.routes.draw do
   delete '/logout',                to: 'sessions#destroy', as: :logout
   get    '/oauth/callback/github', to: 'sessions#create'
 
-  # Projects-related routes
-  resources :projects, param: :slug
+  # Users & Projects related routes
+  resources :users, param: :login, only: [:show, :update] do
 
-  # Users-related routes
-  resources :users, param: :login, only: :show
+    nested do
+      # projects are scoped by platform
+      scope '/:platform' do
+        # Projects-related routes
+        resources :projects, param: :slug, only: [:show], path: '', constraints: { slug: /[^\/]+/ }
+      end
+    end
+
+  end
 
 end

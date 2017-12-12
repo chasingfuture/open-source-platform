@@ -1,0 +1,6 @@
+handling of Github API errors
+handling of repos deletions
+sync status
+sync limit
+sync ajax?
+allow non-critical failure on sync

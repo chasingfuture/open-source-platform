@@ -1,0 +1,7 @@
+fr:
+  views:
+    users:
+      show:
+        sign_in_to_sync: Connectez-vous pour mettre à jour votre profil
+        sync: Rafraîchir
+        sync_tooltip: Synchronise le profil avec les informations disponibles sur Github

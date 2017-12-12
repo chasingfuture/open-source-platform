@@ -2,14 +2,14 @@ require 'rails_helper'
 
 RSpec.describe SessionsController, type: :controller do
 
-  let!(:user) { FactoryBot.create :user_simon_ninon }
+  let!(:existing_user) { FactoryBot.create :user_simon_ninon }
 
   describe 'login' do
 
     context 'when the user is already authenticated' do
 
       it 'should redirect to the home page' do
-        get :new, session: { user_id: user.id }
+        get :new, session: { user_id: existing_user.id }
         expect(response).to redirect_to root_path
       end
 
@@ -19,7 +19,7 @@ RSpec.describe SessionsController, type: :controller do
 
       it 'should redirect to the github oauth login page' do
         get :new
-        expect(response).to redirect_to Github::oauth_login_url
+        expect(response).to redirect_to GithubAPI::oauth_login_url
       end
 
     end
@@ -31,15 +31,13 @@ RSpec.describe SessionsController, type: :controller do
     context 'when the user is already authenticated' do
 
       it 'should redirect to the home page' do
-        get :create, session: { user_id: user.id }
+        get :create, session: { user_id: existing_user.id }
         expect(response).to redirect_to root_path
       end
 
     end
 
     context 'when it fails to exchange code' do
-
-      let(:user) { FactoryBot.build :user_simon_ninon }
 
       # mock octokit
       before do
@@ -54,14 +52,12 @@ RSpec.describe SessionsController, type: :controller do
 
       it 'should not create a new account' do
         get :create, params: { code: '1234' }
-        expect(User.count).to eq 0
+        expect(User.count).to eq 1
       end
 
     end
 
     context 'when it fails to fetch profile' do
-
-      let(:user) { FactoryBot.build :user_simon_ninon }
 
       # mock octokit
       before do
@@ -77,14 +73,12 @@ RSpec.describe SessionsController, type: :controller do
 
       it 'should not create a new account' do
         get :create, params: { code: '1234' }
-        expect(User.count).to eq 0
+        expect(User.count).to eq 1
       end
 
     end
 
     context 'when it fetches invalid profile information' do
-
-      let(:user) { FactoryBot.build :user_simon_ninon }
 
       # mock octokit
       before do
@@ -100,7 +94,7 @@ RSpec.describe SessionsController, type: :controller do
 
       it 'should not create a new account' do
         get :create, params: { code: '1234' }
-        expect(User.count).to eq 0
+        expect(User.count).to eq 1
       end
 
     end
@@ -114,7 +108,13 @@ RSpec.describe SessionsController, type: :controller do
         # mock octokit
         before do
           expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
-          expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: new_user.github_ext_id, login: new_user.login, name: new_user.name, email: new_user.email, avatar_url: new_user.avatar_url })
+          expect_any_instance_of(Octokit::Client).to receive(:user).and_return({
+            id:         new_user.github_ext_id,
+            login:      new_user.login,
+            name:       new_user.name,
+            email:      new_user.email,
+            avatar_url: new_user.avatar_url
+          })
         end
 
         it 'should redirect ot home page' do
@@ -128,8 +128,14 @@ RSpec.describe SessionsController, type: :controller do
           expect(User.count).to eq 2
 
           # check user fields
-          attrs = User.last.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
-          expect(attrs).to eq({ "github_ext_id" => new_user.github_ext_id, "login" => new_user.login, "name" => new_user.name, "email" => new_user.email, "avatar_url" => new_user.avatar_url })
+          attrs = User.last.attributes.except("_id")
+          expect(attrs).to eq({
+            "github_ext_id" => new_user.github_ext_id,
+            "login"         => new_user.login,
+            "name"          => new_user.name,
+            "email"         => new_user.email,
+            "avatar_url"    => new_user.avatar_url
+          })
         end
 
       end
@@ -141,7 +147,13 @@ RSpec.describe SessionsController, type: :controller do
           # mock octokit
           before do
             expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
-            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: user.github_ext_id, login: user.login, name: user.name, email: user.email, avatar_url: user.avatar_url })
+            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({
+              id:         existing_user.github_ext_id,
+              login:      existing_user.login,
+              name:       existing_user.name,
+              email:      existing_user.email,
+              avatar_url: existing_user.avatar_url
+            })
           end
 
           it 'should redirect ot home page' do
@@ -155,8 +167,14 @@ RSpec.describe SessionsController, type: :controller do
             expect(User.count).to eq 1
 
             # check user fields
-            attrs = User.first.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
-            expect(attrs).to eq({ "github_ext_id" => user.github_ext_id, "login" => user.login, "name" => user.name, "email" => user.email, "avatar_url" => user.avatar_url })
+            attrs = User.first.attributes.except("_id")
+            expect(attrs).to eq({
+              "github_ext_id" => existing_user.github_ext_id,
+              "login"         => existing_user.login,
+              "name"          => existing_user.name,
+              "email"         => existing_user.email,
+              "avatar_url"    => existing_user.avatar_url
+            })
           end
 
         end
@@ -168,7 +186,13 @@ RSpec.describe SessionsController, type: :controller do
           # mock octokit
           before do
             expect(Octokit).to receive(:exchange_code_for_token).and_return({access_token: "access_token"})
-            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({ id: user.github_ext_id, login: edited_user.login, name: edited_user.name, email: edited_user.email, avatar_url: edited_user.avatar_url })
+            expect_any_instance_of(Octokit::Client).to receive(:user).and_return({
+              id:         existing_user.github_ext_id,
+              login:      edited_user.login,
+              name:       edited_user.name,
+              email:      edited_user.email,
+              avatar_url: edited_user.avatar_url
+            })
           end
 
           it 'should redirect ot home page' do
@@ -182,8 +206,14 @@ RSpec.describe SessionsController, type: :controller do
             expect(User.count).to eq 1
 
             # check user fields
-            attrs = User.first.attributes.slice(:github_ext_id, :login, :name, :email, :avatar_url)
-            expect(attrs).to eq({ "github_ext_id" => user.github_ext_id, "login" => edited_user.login, "name" => edited_user.name, "email" => edited_user.email, "avatar_url" => edited_user.avatar_url })
+            attrs = User.first.attributes.except("_id")
+            expect(attrs).to eq({
+              "github_ext_id" => existing_user.github_ext_id,
+              "login"         => edited_user.login,
+              "name"          => edited_user.name,
+              "email"         => edited_user.email,
+              "avatar_url"    => edited_user.avatar_url
+            })
           end
 
         end
@@ -199,8 +229,8 @@ RSpec.describe SessionsController, type: :controller do
     context 'when the user is already authenticated' do
 
       it 'should redirect to the home page' do
-        get :new, session: { user_id: user.id }
-        expect(session[:user_id]).to eq user.id
+        get :new, session: { user_id: existing_user.id }
+        expect(session[:user_id]).to eq existing_user.id
 
         delete :destroy
         expect(response).to redirect_to root_path

@@ -1,0 +1,8 @@
+en:
+  controllers:
+    users_controller:
+      fetch_user:
+        not_found: User not found
+      update:
+        success: Profil et repos synchronisés avec succès!
+        error: Désolé, nous n'avons pas pu synchroniser votre profile. Veuillez réessayer.

@@ -1,0 +1,4 @@
+en:
+  controllers:
+    application_controller:
+      access_denied: You are not authorized to process further

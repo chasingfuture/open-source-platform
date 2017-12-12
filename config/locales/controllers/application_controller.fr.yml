@@ -1,0 +1,4 @@
+fr:
+  controllers:
+    application_controller:
+      access_denied: Vous n'êtes pas autorisé à effectuer cette action

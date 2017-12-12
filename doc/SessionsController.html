@@ -259,11 +259,6 @@ creates an account if necessary)</p>
       <pre class="lines">
 
 
-19
-20
-21
-22
-23
 24
 25
 26
@@ -283,32 +278,17 @@ creates an account if necessary)</p>
 40
 41
 42
-43
-44
-45
-46
-47
-48</pre>
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span>
   <span class='comment'># convert code into access token
-</span>  <span class='id identifier rubyid_access_token'>access_token</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Github.html" title="Github (module)">Github</a></span></span><span class='op'>::</span><span class='id identifier rubyid_oauth_exchange_code_for_token'><span class='object_link'><a href="Github.html#oauth_exchange_code_for_token-class_method" title="Github.oauth_exchange_code_for_token (method)">oauth_exchange_code_for_token</a></span></span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:code</span><span class='rbracket'>]</span>
+</span>  <span class='id identifier rubyid_access_token'>access_token</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="GithubAPI.html" title="GithubAPI (module)">GithubAPI</a></span></span><span class='op'>::</span><span class='id identifier rubyid_oauth_exchange_code_for_token'><span class='object_link'><a href="GithubAPI.html#oauth_exchange_code_for_token-class_method" title="GithubAPI.oauth_exchange_code_for_token (method)">oauth_exchange_code_for_token</a></span></span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:code</span><span class='rbracket'>]</span>
 
-  <span class='comment'># fetch github profile information
-</span>  <span class='id identifier rubyid_github_profile'>github_profile</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Github.html" title="Github (module)">Github</a></span></span><span class='op'>::</span><span class='id identifier rubyid_profile'><span class='object_link'><a href="Github.html#profile-class_method" title="Github.profile (method)">profile</a></span></span> <span class='id identifier rubyid_access_token'>access_token</span>
-
-  <span class='comment'># try to fetch user profile in DB
-</span>  <span class='id identifier rubyid_user'>user</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="User.html" title="User (class)">User</a></span></span><span class='period'>.</span><span class='id identifier rubyid_find_or_initialize_by'>find_or_initialize_by</span><span class='lparen'>(</span><span class='label'>github_ext_id:</span> <span class='id identifier rubyid_github_profile'>github_profile</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-
-  <span class='comment'># setup or update profile
-</span>  <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_login'>login</span>      <span class='op'>=</span> <span class='id identifier rubyid_github_profile'>github_profile</span><span class='lbracket'>[</span><span class='symbol'>:login</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>       <span class='op'>=</span> <span class='id identifier rubyid_github_profile'>github_profile</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_email'>email</span>      <span class='op'>=</span> <span class='id identifier rubyid_github_profile'>github_profile</span><span class='lbracket'>[</span><span class='symbol'>:email</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_avatar_url'>avatar_url</span> <span class='op'>=</span> <span class='id identifier rubyid_github_profile'>github_profile</span><span class='lbracket'>[</span><span class='symbol'>:avatar_url</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_save!'>save!</span>
+  <span class='comment'># Sync user profile and repositories
+</span>  <span class='id identifier rubyid_user'>user</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="GithubSynchronizer.html" title="GithubSynchronizer (module)">GithubSynchronizer</a></span></span><span class='op'>::</span><span class='id identifier rubyid_synchronize_profile'><span class='object_link'><a href="GithubSynchronizer.html#synchronize_profile-class_method" title="GithubSynchronizer.synchronize_profile (method)">synchronize_profile</a></span></span> <span class='id identifier rubyid_access_token'>access_token</span>
 
   <span class='comment'># setup session
 </span>  <span class='id identifier rubyid_session'>session</span><span class='lbracket'>[</span><span class='symbol'>:github_access_token</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_access_token'>access_token</span>
@@ -354,15 +334,15 @@ creates an account if necessary)</p>
       <pre class="lines">
 
 
-52
-53
-54
-55
-56
-57</pre>
+47
+48
+49
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 47</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_destroy'>destroy</span>
   <span class='comment'># reset session
@@ -403,15 +383,15 @@ path as there is nothing to do</p>
       <pre class="lines">
 
 
-12
-13
-14</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/sessions_controller.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new'>new</span>
-  <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='const'><span class='object_link'><a href="Github.html" title="Github (module)">Github</a></span></span><span class='op'>::</span><span class='id identifier rubyid_oauth_login_url'><span class='object_link'><a href="Github.html#oauth_login_url-class_method" title="Github.oauth_login_url (method)">oauth_login_url</a></span></span>
+  <span class='id identifier rubyid_redirect_to'>redirect_to</span> <span class='const'><span class='object_link'><a href="GithubAPI.html" title="GithubAPI (module)">GithubAPI</a></span></span><span class='op'>::</span><span class='id identifier rubyid_oauth_login_url'><span class='object_link'><a href="GithubAPI.html#oauth_login_url-class_method" title="GithubAPI.oauth_login_url (method)">oauth_login_url</a></span></span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -423,7 +403,7 @@ path as there is nothing to do</p>
 </div>
 
       <div id="footer">
-  Generated on Sun Dec 10 00:09:59 2017 by
+  Generated on Tue Dec 12 00:02:43 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.12 (ruby-2.4.2).
 </div>

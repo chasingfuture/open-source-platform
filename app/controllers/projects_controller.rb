@@ -6,6 +6,9 @@ class ProjectsController < ApplicationController
   # Pre-process callbacks
   before_action :fetch_project, only: [:show]
 
+  # unnecessary permission check
+  skip_authorization_check only: [:show]
+
   # GET /controllers/:slug
   def show
   end

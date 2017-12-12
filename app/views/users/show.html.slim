@@ -7,8 +7,15 @@
   //! user information
   .col-md-9
     h1 = @user.name
+    //! sync button to force sync
+    - if user_signed_in?
+      = link_to I18n.t("views.users.show.sync"), compose_user_path(@user), method: :put, title: I18n.t("views.users.show.sync_tooltip"), class: 'btn btn-outline-success my-2 my-sm-0'
+    - else
+      = link_to I18n.t("views.users.show.sign_in_to_sync"), login_path, class: 'btn btn-outline-success my-2 my-sm-0'
+
 
 //! Projects
 .row
-  - @projects.each do |project|
-    = link_to project.name, project
+  ul
+    - @projects.each do |project|
+      li = link_to project.name, compose_project_path(@user, project)

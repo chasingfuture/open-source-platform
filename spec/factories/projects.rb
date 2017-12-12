@@ -7,6 +7,8 @@ FactoryBot.define do
     repository_url  "https://github.com/cylix/cpp_redis"
     git_url         "git@github.com:Cylix/cpp_redis.git"
     homepage_url    "https://cylix.github.io/cpp_redis"
+    ext_id          100
+    ext_source      Platform::GITHUB
 
     # associations
     owner           { User.where(github_ext_id: FactoryBot::build(:user_simon_ninon).github_ext_id).first || FactoryBot::create(:user_simon_ninon) }
@@ -19,6 +21,8 @@ FactoryBot.define do
     repository_url  "https://github.com/cylix/tacopie"
     git_url         "git@github.com:Cylix/tacopie.git"
     homepage_url    "https://cylix.github.io/tacopie"
+    ext_id          101
+    ext_source      Platform::GITHUB
 
     # associations
     owner           { User.where(github_ext_id: FactoryBot::build(:user_simon_ninon).github_ext_id).first || FactoryBot::create(:user_simon_ninon) }
@@ -31,6 +35,8 @@ FactoryBot.define do
     repository_url  "https://github.com/chasing_future/cse-110"
     git_url         "git@github.com:chasing_future/cse-110.git"
     homepage_url    "https://github.com/chasing_future/cse-110"
+    ext_id          102
+    ext_source      Platform::GITHUB
 
     # associations
     owner           { User.where(github_ext_id: FactoryBot::build(:user_mengying_li).github_ext_id).first || FactoryBot::create(:user_mengying_li) }

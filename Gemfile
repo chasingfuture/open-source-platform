@@ -7,6 +7,8 @@ end
 
 # Bootstrap
 gem 'bootstrap', '~> 4.0.0.beta2.1'
+# Permissions definition
+gem "cancancan"
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # environment variables access
