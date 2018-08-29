@@ -24,9 +24,13 @@ class SessionsController < ApplicationController
   def create
     # convert code into access token
     access_token = GithubAPI::oauth_exchange_code_for_token params[:code]
+    puts "access token"
+    puts access_token.to_s()
 
     # Sync user profile and repositories
     user = GithubSynchronizer::synchronize_profile access_token
+    puts "user"
+    puts user.to_s()
 
     # setup session
     session[:github_access_token] = access_token
@@ -36,6 +40,7 @@ class SessionsController < ApplicationController
     flash[:success] = I18n.t('controllers.sessions_controller.create.success')
   rescue Exception => e
     # notify the user of the failure
+    puts e.to_s()
     flash[:error] = I18n.t('controllers.sessions_controller.create.error')
   ensure
     # always redirect to the main page

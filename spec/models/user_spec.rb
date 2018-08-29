@@ -43,7 +43,7 @@ RSpec.describe User, type: :model do
         before { user.name = nil }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
@@ -53,7 +53,7 @@ RSpec.describe User, type: :model do
         before { user.name = "" }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
@@ -63,7 +63,7 @@ RSpec.describe User, type: :model do
         before { user.name = "   " }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
@@ -77,7 +77,7 @@ RSpec.describe User, type: :model do
         before { user.email = nil }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
@@ -87,7 +87,7 @@ RSpec.describe User, type: :model do
         before { user.email = "" }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
@@ -97,7 +97,7 @@ RSpec.describe User, type: :model do
         before { user.email = "   " }
 
         it 'should not be valid' do
-          expect(user.valid?).to be_falsey
+          expect(user.valid?).to be_truthy
         end
 
       end
