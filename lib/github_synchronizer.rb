@@ -52,6 +52,9 @@ module GithubSynchronizer
       # try to fetch repo in DB
       project = Project.find_or_initialize_by(ext_id: repo[:id], ext_source: Platform::GITHUB)
 
+      # skip if not the owner
+      next if repo[:owner][:login] != user[:login]
+
       # setup or update repo
       project.slug           = repo[:name] # github repo name act as name and slugs
       project.name           = repo[:name]

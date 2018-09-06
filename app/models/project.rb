@@ -33,7 +33,7 @@ class Project
   validates_presence_of   :repository_url
   validates_presence_of   :git_url
   validates_presence_of   :slug
-  validates_uniqueness_of :slug
+  validates_uniqueness_of :slug, scope: :owner
   validates_presence_of   :owner
   validates_presence_of   :ext_id
   validates_uniqueness_of :ext_id
