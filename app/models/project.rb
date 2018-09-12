@@ -20,6 +20,9 @@ class Project
   field :homepage_url,    type: String
   field :ext_id,          type: Integer
   field :ext_source,      type: String
+  # newly added field
+  field :star_count,      type: Integer
+  
 
   # relations
   belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'

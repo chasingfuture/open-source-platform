@@ -62,6 +62,7 @@ module GithubSynchronizer
       project.repository_url = repo[:url]
       project.git_url        = repo[:git_url]
       project.homepage_url   = repo[:homepage]
+      project.star_count     = repo[:stargazers_count]
       project.owner          = user
       project.save!
 
