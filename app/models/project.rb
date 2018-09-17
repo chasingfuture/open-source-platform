@@ -22,7 +22,7 @@ class Project
   field :ext_source,      type: String
   # newly added field
   field :star_count,      type: Integer
-  
+  field :contributors_count, type: Integer
 
   # relations
   belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'

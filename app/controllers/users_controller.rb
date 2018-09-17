@@ -31,7 +31,9 @@ class UsersController < ApplicationController
     # notify user of the success
     flash[:success] = I18n.t("controllers.users_controller.update.success")
   rescue => exception
+    puts "I KNOW WHAT GOT PRINTED" 
   puts exception
+  puts exception.backtrace
     # notify user of the failure
     flash[:error] = I18n.t("controllers.users_controller.update.error")
   ensure

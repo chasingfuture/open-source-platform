@@ -55,6 +55,10 @@ module GithubSynchronizer
       # skip if not the owner
       next if repo[:owner][:login] != user[:login]
 
+      # make API call to get repo contributors count
+      input_repo = user[:login] + "/" + repo[:name]
+      contributors = GithubAPI::contributors(access_token, input_repo)
+
       # setup or update repo
       project.slug           = repo[:name] # github repo name act as name and slugs
       project.name           = repo[:name]
@@ -64,11 +68,12 @@ module GithubSynchronizer
       project.homepage_url   = repo[:homepage]
       project.star_count     = repo[:stargazers_count]
       project.owner          = user
+      project.contributors_count = contributors.length
       project.save!
-
       # return created or updated project
       project
     end
   end
+
 
 end

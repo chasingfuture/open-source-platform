@@ -23,7 +23,11 @@ module GithubAPI
 
     # Get the github public repositories associated to the access token
     def self.public_repositories(access_token)
-      Octokit::Client.new(access_token: access_token).repositories
+      Octokit::Client.new(access_token: access_token).repositories()
     end
 
+    # Get the github contributors details and count
+    def self.contributors(access_token, repo)
+      Octokit::Client.new(access_token: access_token).contributors(repo)
+    end
 end
